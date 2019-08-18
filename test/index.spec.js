@@ -1,0 +1,120 @@
+import {checkOut, initArray, solution, validSolution} from "../src/index";
+import { strict as assert } from 'assert';
+
+describe("Harry books test", () => {
+    it("Should return an array initialized with the price of the books bought after apply the discount", () => {
+        var cart = new Map();
+        cart.set(1, 2);
+        cart.set(2, 2);
+        var [basket, dp] = initArray(cart);
+        assert.ok(basket.length > 0);
+        assert.ok(dp.length === Math.pow(2, 5));    
+    });
+
+    it("Should return true if an intermediate solution is valid, otherwise returns false", () => {
+        var basket = [2, 2, 0, 0, 0];
+        var si = [];
+        var aux = [0, 0, 0, 0, 1];
+        assert.ok(!solution(basket, si, aux));
+        aux = [0, 0, 0, 1, 0];
+        assert.ok(!solution(basket, si, aux));
+        aux = [0, 0, 1, 0, 0];
+        assert.ok(!solution(basket, si, aux));
+        aux = [0, 1, 0, 0, 0];
+        assert.ok(solution(basket, si, aux));
+        aux = [1, 0, 0, 0, 0];
+        assert.ok(solution(basket, si, aux));
+        aux = [2, 0, 0, 0, 0];
+        assert.ok(solution(basket, si, aux));
+        aux = [0, 2, 0, 2, 0];
+        assert.ok(!solution(basket, si, aux));
+        aux = [2, 2, 0, 0, 0];
+        assert.ok(solution(basket, si, aux));
+        aux = [3, 0, 0, 0, 0];
+        assert.ok(!solution(basket, si, aux));
+        si = [[1, 0, 0, 0, 0]];
+        aux = [0, 0, 0, 1, 0];
+        assert.ok(!solution(basket, si, aux));
+        aux = [0, 0, 1, 0, 0];
+        assert.ok(!solution(basket, si, aux));
+        aux = [0, 1, 0, 0, 0];
+        assert.ok(solution(basket, si, aux));
+        aux = [1, 0, 0, 0, 0];
+        assert.ok(solution(basket, si, aux));
+        si = [[1, 0, 0, 0, 0], [0, 1, 0, 0, 0]];
+        aux = [0, 0, 1, 1, 1];
+        assert.ok(!solution(basket, si, aux));
+        aux = [1, 0, 0, 0, 0];
+        assert.ok(solution(basket, si, aux));
+        aux = [0, 1, 0, 0, 0];
+        assert.ok(solution(basket, si, aux));
+        aux = [1, 1, 0, 0, 0];
+        assert.ok(solution(basket, si, aux));
+    });
+
+    it("Should return true if the initial solution is a good solution. This good solution must not be the best solution", () => {
+        var basket = [2, 2, 0, 0, 0];
+        var si = [[0, 1, 0, 0, 0], [0, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 0, 0, 0, 0]];
+        assert.ok(validSolution(basket, si));
+        si = [[0, 1, 0, 0, 0], [1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [1, 0, 0, 0, 0]];
+        assert.ok(validSolution(basket, si));
+        si = [[0, 1, 0, 0, 0], [1, 0, 0, 0, 0], [0, 1, 0, 0, 0]];
+        assert.ok(!validSolution(basket, si));
+        si = [[0, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 0, 0, 0, 0]];
+        assert.ok(!validSolution(basket, si));
+        si = [[1, 1, 0, 0, 0], [1, 1, 0, 0, 0]];
+        assert.ok(validSolution(basket, si));
+        si = [[1, 1, 0, 0, 0], [1, 0, 0, 0, 0]];
+        assert.ok(!validSolution(basket, si));
+        si = [[0, 1, 0, 0, 0], [1, 1, 0, 0, 0]];
+        assert.ok(!validSolution(basket, si));
+
+    });
+
+    it("Should return the best price for the cart", () => {
+        var cart = new Map();
+        cart.set(1, 2);
+        cart.set(2, 2);
+        cart.set(3, 0);
+        cart.set(4, 0);
+        cart.set(5, 0);
+        assert.ok(parseFloat(30.40).toFixed(2) === parseFloat(checkOut(cart)).toFixed(2));
+        cart.set(1, 2);
+        cart.set(2, 2);
+        cart.set(3, 2);
+        cart.set(4, 1);
+        cart.set(5, 1);
+        assert.ok(parseFloat(51.20).toFixed(2) === parseFloat(checkOut(cart)).toFixed(2));
+        cart.set(1, 2);
+        cart.set(2, 0);
+        cart.set(3, 2);
+        cart.set(4, 0);
+        cart.set(5, 0);
+        assert.ok(parseFloat(30.40).toFixed(2) === parseFloat(checkOut(cart)).toFixed(2));
+        cart.set(1, 0);
+        cart.set(2, 0);
+        cart.set(3, 2);
+        cart.set(4, 0);
+        cart.set(5, 0);
+        assert.ok(parseFloat(16.00).toFixed(2) === parseFloat(checkOut(cart)).toFixed(2));
+        cart.set(1, 0);
+        cart.set(2, 0);
+        cart.set(3, 0);
+        cart.set(4, 1);
+        cart.set(5, 1);
+        assert.ok(parseFloat(15.20).toFixed(2) === parseFloat(checkOut(cart)).toFixed(2));
+        cart.set(1, 1);
+        cart.set(2, 1);
+        cart.set(3, 1);
+        cart.set(4, 1);
+        cart.set(5, 1);
+        assert.ok(parseFloat(30.00).toFixed(2) === parseFloat(checkOut(cart)).toFixed(2));
+        // cart.set(1, 2);
+        // cart.set(2, 1);
+        // cart.set(3, 1);
+        // cart.set(4, 1);
+        // cart.set(5, 1);
+        // assert.ok(parseFloat(38.00).toFixed(2) === parseFloat(checkOut(cart)).toFixed(2));
+    });
+
+});
