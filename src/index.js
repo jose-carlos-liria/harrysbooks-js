@@ -1,5 +1,10 @@
 const PRICE = 8.00;
 
+/**
+ * Return an array with all the combinations of books possible (2⁵ = 32) and its price with the discount applied.
+ * 
+ * @param {Map} cart 
+ */
 export const initArray = (cart) => {
     var dp = [];
 
@@ -10,11 +15,8 @@ export const initArray = (cart) => {
     basket[3] = typeof cart.get(4) !== "undefined" ? cart.get(4) : 0;
     basket[4] = typeof cart.get(5) !== "undefined" ? cart.get(5) : 0;
 
-    //If we buy zero books
     var aux = [[0, 0, 0, 0, 0], parseFloat(0).toFixed(2)];
     dp.push(aux);
-
-    //If we buy only one book
     aux = [[0, 0, 0, 0, 1], parseFloat(PRICE).toFixed(2)];
     dp.push(aux);
     aux = [[0, 0, 0, 1, 0], parseFloat(PRICE).toFixed(2)];
@@ -84,9 +86,9 @@ export const initArray = (cart) => {
 /**
  * Returns true if aux can be belongs to a possible finale solution, otherwise returns false
  * 
- * @param { array } basket 
- * @param { array } si 
- * @param { array } aux 
+ * @param { array } basket  Array with the books bought by the customer
+ * @param { array } si      Array with the initial final solution
+ * @param { array } sol     Array with a possible solution. If si and sol can be added then returns true
  */
 export const solution = (basket, si, sol) => {
     var ps = [...sol];
@@ -104,6 +106,12 @@ export const solution = (basket, si, sol) => {
     return true;
 }
 
+/**
+ * Returns true is a valid final solution, otherwise returns false
+ * 
+ * @param basket Array with the books bought by the customer
+ * @param si Array with a initial solution
+ */
 export const validSolution = (basket, si) => {
     var aux = [...basket];
     for (var i = 0; i < si.length; i++){
@@ -116,6 +124,12 @@ export const validSolution = (basket, si) => {
     return distinctZero.length == 0 ? true : false;
 }
 
+/**
+ * Returns the best price for the purchase of the customer
+ * 
+ * @param cart Basket with all the books bought by the customer. If the customer has no bought some copy of a determinated book in the cart this
+ * will be appear like {number_of_book, 0} 
+ */
 export const checkOut = (cart) => {
     const [basket, dp] = initArray(cart);
     var voa = Number.POSITIVE_INFINITY;
